@@ -3,13 +3,7 @@ import subprocess
 
 args = sys.argv
 
-pwd_folder = r"/home/yas_yasyu/work/mnt5/" 
-in_folder = pwd_folder + r"input/"
-out_folder = pwd_folder + r"output/"
-cmd_folder = pwd_folder + r"steiner-space-travel/"
-
 run_cmd = "n"
-arg_command = "./a.out"
 file_number = 0
 if len(args) > 1:
 	if args[1].isdecimal():
@@ -29,6 +23,13 @@ if len(args) > 1:
 			else:
 				run_cmd = "p"
 
+
+pwd_folder = r"/home/yas_yasyu/work/mnt5/" 
+in_folder = pwd_folder + r"input/"
+out_folder = pwd_folder + r"output/"
+cmd_folder = pwd_folder + r"steiner-space-travel/"
+
+arg_command = "./a.out"
 file = f"{str(file_number).zfill(4)}"
 in_file =  f"{in_folder}{file}.txt"
 out_file = f"{out_folder}{file}.txt"
