@@ -65,7 +65,11 @@ def all():
 
 
 def panic():
-	print("Panic!")
+	print("python3 tester.py $cmd")
+	print('$cmd : v 10')
+	print('$cmd : 10')
+	print('$cmd : a')
+
 	exit()
 
 if not run_cmd in "nvap":
