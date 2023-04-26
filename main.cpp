@@ -173,7 +173,7 @@ void TwoOpt(vector<vector<ll>> distances, TimeKeeper t)
 
 void solve(TimeKeeper t) {
     for(int i = 1; i < M + 1; i++) {
-        station.push_back(Planet(i*120, i*120, i));
+        station.push_back(Planet(rand()%1000, rand()%1000, i));
     }
 
 	vector<vector<ll>> distances(N, vector(N, INF));
@@ -193,7 +193,7 @@ void solve(TimeKeeper t) {
 	for(int i = 0; i < N; i++)
 	{
 		ll minDist = INF;
-		int nxtIdx = -1;
+		int nxtIdx;
 		bef.insert(frmIdx + 1);
 
 
@@ -209,7 +209,7 @@ void solve(TimeKeeper t) {
 				nxtIdx = toIdx;
 			}
 		}
-		if(nxtIdx == -1) continue;
+
 		ans.push_back(pair<int, int>(1, nxtIdx));
 		frmIdx = nxtIdx;
 	}
