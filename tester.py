@@ -29,7 +29,7 @@ in_folder = pwd_folder + r"input/"
 out_folder = pwd_folder + r"output/"
 cmd_folder = pwd_folder + r"steiner-space-travel/"
 
-arg_command = "./a.out"
+arg_command = "'python3 main.py'"
 file = f"{str(file_number).zfill(4)}"
 in_file =  f"{in_folder}{file}.txt"
 out_file = f"{out_folder}{file}.txt"

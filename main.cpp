@@ -97,7 +97,7 @@ void Input() {
 
 void OutputStation() {
     for(int i = 0; i < M; i++) {
-        cout << station[i].a << " " << station[i].b << endl;
+        cout << station[i].a << " " << station[i].b+1 << endl;
     }
     return;
 }
@@ -121,7 +121,24 @@ ll Distance(Planet pa, Planet pb)
 	ll b = (pa.b - pb.b);
 	return a*a + b*b;
 }
-
+ll Distance(Planet pa, Planet pb, int pattern)
+{
+	int magnification = 1;
+	switch (pattern)
+	{
+	case 2:
+		magnification *= A;
+	case 1:
+		magnification *= A;
+		break;
+	
+	default:
+		break;
+	}
+	ll a = (pa.a - pb.a);
+	ll b = (pa.b - pb.b);
+	return (a*a + b*b)*magnification;
+}
 void Pick(int &a, int &b)
 {
 	while(true)
@@ -162,8 +179,8 @@ void TwoOpt(vector<vector<ll>> distances, TimeKeeper t)
 		Planet Pna = (ans[na].first == 1) ? planet[ans[na].second] : station[ans[na].second];
 		Planet Pnb = (ans[nb].first == 1) ? planet[ans[nb].second] : station[ans[nb].second];
 
-		ll beforeDist = Distance(Pa, Pna) + Distance(Pb, Pnb);
-		ll afterDist = Distance(Pa, Pb) + Distance(Pna, Pnb);
+		ll beforeDist = Distance(Pa, Pna, 0) + Distance(Pb, Pnb, 0);
+		ll afterDist = Distance(Pa, Pb, 0) + Distance(Pna, Pnb, 0);
 		if (beforeDist > afterDist)
 		{
 			EdgeSwap(a, b);
@@ -172,50 +189,67 @@ void TwoOpt(vector<vector<ll>> distances, TimeKeeper t)
 }
 
 void solve(TimeKeeper t) {
-    for(int i = 1; i < M + 1; i++) {
-        station.push_back(Planet(rand()%1000, rand()%1000, i));
-    }
-
-	vector<vector<ll>> distances(N, vector(N, INF));
-
-	for(int i = 0; i < N; i++)
+	int base = 500;
+	int cnt = 0;
+	for(int i = -250; i <= 250; i += 250)
 	{
-		for(int j = 0; j < N; j++)
+		for(int j = -250; j <= 250; j += 250)
 		{
-			distances[i][j] = Distance(planet[i], planet[j]);
+			if(i==j && i == 0) continue;
+			station.push_back(Planet(base + i, base + j, cnt));
+			cnt++;
+		}
+	}
+
+	vector<vector<ll>> distances(planet.size(), vector(planet.size(), INF));
+
+	for(int i = 0; i < planet.size(); i++)
+	{
+		for(int j = 0; j < planet.size(); j++)
+		{
+			int stationCnt = 0;
+			Planet planetA(0, 0, 0), planetB(0, 0, 0);
+			if(i >= N)
+			{
+				stationCnt++;
+				planetA = station[i - N];
+			}
+			else
+			{
+				stationCnt++;
+				planetA = planet[i];
+			}
+			if(j >= N)
+			{
+				planetB = station[j - N];
+			}
+			else
+			{
+				planetB = planet[j];
+			}
+			distances[i][j] = Distance(planetA, planetB, stationCnt);
 		}
 	}
 	FloydWarshall(distances);
 
-	set<int> bef;
 	int frmIdx = 0;
-	ans.push_back(pair<int, int>(1, 0));
-	for(int i = 0; i < N; i++)
+
+	for(int frmIdx = 0; frmIdx < planet.size(); frmIdx++)
 	{
 		ll minDist = INF;
 		int nxtIdx;
-		bef.insert(frmIdx + 1);
-
-
-		for(int toIdx = 0; toIdx < N; toIdx++)
+		for(int toIdx = 0; toIdx < planet.size(); toIdx++)
 		{
-			if(bef.find(toIdx+1) != bef.end())
-			{
-				continue;
-			}
+			if(frmIdx == toIdx) continue;
 			if(minDist > distances[frmIdx][toIdx])
 			{
 				minDist = distances[frmIdx][toIdx];
 				nxtIdx = toIdx;
 			}
 		}
-
-		ans.push_back(pair<int, int>(1, nxtIdx));
-		frmIdx = nxtIdx;
 	}
-	ans.push_back(pair<int, int>(1, 0));
 
-	TwoOpt(distances, t);
+	// TwoOpt(distances, t);
 
     return;
 }
